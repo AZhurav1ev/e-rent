@@ -3,9 +3,12 @@ import { Row, Container } from 'react-bootstrap';
 
 export const ItemContainer = styled(Container)`
     padding: 10px;
-    background-color: #fff;
+    background-color: #fafafa;
     margin: 15px auto;
     border: .5px solid lightgray;
+    &:hover{
+        cursor:pointer;
+    }
 `;
 
 export const RowContainer = styled(Row)`
