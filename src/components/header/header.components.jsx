@@ -2,9 +2,11 @@ import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { Link, NavLink } from 'react-router-dom';
 
+import {auth} from '../../firebase/firebase.utils';
+
 import { HeaderContainer } from './header.styles';
 
-const Header = () => (
+const Header = ({ currentUser }) => (
     <HeaderContainer>
         <Navbar className="navbar-custom" expand="md">
             <Navbar.Brand>
@@ -22,6 +24,11 @@ const Header = () => (
                 <Nav className="ml-auto">
                     <Nav.Link as={NavLink} to="/rent" className="text-uppercase text-center">rent</Nav.Link>
                     <Nav.Link as={NavLink} to="/contacts" className="text-uppercase text-center">contacts</Nav.Link>
+                    {
+                        currentUser ? 
+                        <Nav.Link className="text-uppercase text-center" onClick={() => auth.signOut()}>sign out</Nav.Link> :
+                        <Nav.Link as={NavLink} to="/signin" className="text-uppercase text-center">sign in</Nav.Link>
+                    }
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

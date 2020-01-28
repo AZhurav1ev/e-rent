@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 import './App.css';
 
@@ -9,18 +10,50 @@ import RentPage from './pages/rentpage/rentpage.component';
 import Header from './components/header/header.components';
 import signInAndSignUpPage from './pages/signInAndSignUpPage/signInAndSignUpPage.component';
 
-function App() {
-  return (
-    <Container fluid>
-      <Header />
-      <Switch>
-        <Route exact path='/' component={HomePage} />
-        <Route path='/rent' component={RentPage} />
-        <Route path='/signin' component={signInAndSignUpPage} />
+class App extends React.Component {
+  state = {
+    currentUser: null
+  };
 
-      </Switch>
-    </Container>
-  );
+  unsubscribeFromAuth = null;
+
+  componentDidMount() {
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          });
+          console.log(this.state)
+        });
+      }
+      this.setState({ currentUser: userAuth })
+    })
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromAuth();
+  }
+
+
+  render() {
+    return (
+      <Container fluid>
+        <Header currentUser={this.state.currentUser} />
+        <Switch>
+          <Route exact path='/' component={HomePage} />
+          <Route path='/rent' component={RentPage} />
+          <Route path='/signin' component={signInAndSignUpPage} />
+
+        </Switch>
+      </Container>
+    )
+  }
 }
 
 export default App;
