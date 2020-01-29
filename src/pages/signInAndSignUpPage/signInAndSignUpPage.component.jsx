@@ -7,7 +7,7 @@ import SignIn from '../../components/sign-in/sign-in.component';
 import SignUp from '../../components/sign-up/sign-up.component';
 
 
-const signInAndSignUpPage = () => (
+const SignInAndSignUpPage = () => (
     <FormContainer>
         <Row>
             <Col sm={6}>
@@ -20,4 +20,4 @@ const signInAndSignUpPage = () => (
     </FormContainer>
 );
 
-export default signInAndSignUpPage;
+export default SignInAndSignUpPage;

@@ -4,10 +4,12 @@ import { Link, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { auth } from '../../firebase/firebase.utils';
+import CartIcon from '../cart-icon/cart-icon-component';
+import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 
 import { HeaderContainer } from './header.styles';
 
-const Header = ({ currentUser }) => (
+const Header = ({ currentUser, hidden }) => (
     <HeaderContainer>
         <Navbar className="navbar-custom" expand="md">
             <Navbar.Brand>
@@ -20,7 +22,7 @@ const Header = ({ currentUser }) => (
                     />
                 </Link>
             </Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Toggle aria-controls="basic-navbar-nav" className="ml-auto" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ml-auto">
                     <Nav.Link as={NavLink} to="/rent" className="text-uppercase text-center">rent</Nav.Link>
@@ -30,14 +32,19 @@ const Header = ({ currentUser }) => (
                             <Nav.Link className="text-uppercase text-center" onClick={() => auth.signOut()}>sign out</Nav.Link> :
                             <Nav.Link as={NavLink} to="/signin" className="text-uppercase text-center">sign in</Nav.Link>
                     }
+                    <CartIcon />
+                    {
+                        hidden ? null : <CartDropdown />
+                    }
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
     </HeaderContainer>
 );
 
-const mapStateToProps = (state) => ({
-    currentUser: state.user.currentUser
+const mapStateToProps = ({ user: { currentUser }, cart: { hidden } }) => ({
+    currentUser,
+    hidden
 });
 
 export default connect(mapStateToProps)(Header);
